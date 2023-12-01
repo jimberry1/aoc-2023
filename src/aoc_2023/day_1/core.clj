@@ -78,19 +78,17 @@
 (def reversed-number-literals (update-keys normal-number-literals (fn [key]
                                                                     (apply str (reverse key)))))
 
-(def combined-maps (merge numbers normal-number-literals reversed-number-literals))
-
-(defn find-first-digit [input]
+(defn find-first-digit [input term-maps]
   (second (reduce (fn [[lowest-index value] key]
                     (let [index-of-key (str/index-of input key)]
                       (if (and index-of-key (< index-of-key lowest-index))
-                        [index-of-key (combined-maps key)]
+                        [index-of-key (term-maps key)]
                         [lowest-index value])))
                   [99999 nil] ;; example index that will be overwritten instantly
-                  (map first combined-maps))))
+                  (map first term-maps))))
 
 (defn calibration-row->value [input]
-  (str (find-first-digit input) (find-first-digit (apply str (reverse input)))))
+  (str (find-first-digit input (merge numbers normal-number-literals)) (find-first-digit (apply str (reverse input)) (merge numbers reversed-number-literals))))
 
 (->> problem-input
      (map calibration-row->value)
