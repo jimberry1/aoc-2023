@@ -75,31 +75,24 @@
 (def numbers {"1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8 "9" 9})
 (def normal-number-literals {"one" 1 "two" 2 "three" 3 "four" 4 "five" 5
                              "six" 6 "seven" 7 "eight" 8 "nine" 9})
-
 (def reversed-number-literals (update-keys normal-number-literals (fn [key]
                                                                     (apply str (reverse key)))))
 
 (def combined-maps (merge numbers normal-number-literals reversed-number-literals))
 
-(def all-strings-of-interest (map first combined-maps))
-
-(let [first-key (reduce (fn [[lowest-index value] key]
-                          (let [index-of-key (str/index-of)]
-                            (when index-of-key))) nil all-strings-of-interest)])
-
-(defn find-first-ref [input]
+(defn find-first-digit [input]
   (second (reduce (fn [[lowest-index value] key]
                     (let [index-of-key (str/index-of input key)]
                       (if (and index-of-key (< index-of-key lowest-index))
                         [index-of-key (combined-maps key)]
                         [lowest-index value])))
                   [99999 nil] ;; example index that will be overwritten instantly
-                  all-strings-of-interest)))
+                  (map first combined-maps))))
 
-(defn find-code [input]
-  (str (find-first-ref input) (find-first-ref (apply str (reverse input)))))
+(defn calibration-row->value [input]
+  (str (find-first-digit input) (find-first-digit (apply str (reverse input)))))
 
 (->> problem-input
-     (map find-code)
+     (map calibration-row->value)
      (map #(Integer/parseInt %))
      (apply +))
