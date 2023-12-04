@@ -1,4 +1,4 @@
-(ns aoc-2023.core
+(ns aoc-2023.day-4.core
   (:require [clojure.string :as str]
             [aoc-2023.utils :as utils]))
 
