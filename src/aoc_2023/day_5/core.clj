@@ -47,15 +47,8 @@
         seed-maps (map parse-map unparsed-maps)]
     [seed-nums seed-maps]))
 
-(defn cur-key->next-dest [input-maps from-key]
-  (reduce (fn [acc input-map]
-            (when (= from-key (:from input-map))
-              (reduced (:to input-map))))
-          nil
-          input-maps))
-
 (defn cur-key->location-map [input-maps from-key]
-  (reduce (fn [acc input-map]
+  (reduce (fn [_acc input-map]
             (when (= from-key (:from input-map))
               (reduced input-map)))
           nil
@@ -92,13 +85,13 @@
 (defn ->offset-adjusted-range
   "Applies the offset of a range to the :from and :to keys
    e.g. {:from 0 :to 5 :offset 10} -> {:from 10 :to 15}"
-  [{:keys [from to offset] :as range-with-offset}]
+  [{:keys [from to offset] :as _range-with-offset}]
   {:from (+ from offset) :to (+ to offset)})
 
 (defn range->ordered-mappings-in-range
   "Returns a sorted collection of all mappings for a given directory 
    that fully or partially overlap with the provided number range"
-  [{range-from :from range-to :to :as last-range} all-mappings]
+  [{range-from :from range-to :to :as _last-range} all-mappings]
   (->> all-mappings
        (remove (fn [{mapping-from :from mapping-to :to}]
                  (or
@@ -132,7 +125,7 @@
                           :else {:from range-from :to (min first-to range-to) :offset first-offset})]
     (chain-ranges full-range first-sub-range all-in-range)))
 
-(defn combine-ranges [{last-from :from last-to :to :as last-range} all-mappings]
+(defn combine-ranges [last-range all-mappings]
   (->> last-range
        (range->sub-ranges all-mappings)
        (map ->offset-adjusted-range)))
