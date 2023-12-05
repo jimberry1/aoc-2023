@@ -5,3 +5,8 @@
   (-> filename
       slurp
       str/split-lines))
+
+(defn string->digit-seq [input]
+  (->> input
+       (re-seq #"\d+")
+       (map #(Long/parseLong %))))
