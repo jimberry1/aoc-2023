@@ -34,9 +34,6 @@
 ;; This extends part 1 by having to check the string for text matches
 ;; Easy way to do this is map between strings and ints, checking each iteration through the input for presence of any of the numbers
 ;; not the most efficient, but doesn't add too much overhead to the solution efficiency
-(def example-part-2-input
-  (utils/input-file->rows "src/aoc_2023/day_1/example_part_2.txt"))
-
 (def normal-number-literals {"one" 1 "two" 2 "three" 3 "four" 4 "five" 5
                              "six" 6 "seven" 7 "eight" 8 "nine" 9})
 
@@ -64,21 +61,17 @@
         last-digit (find-first-digit-part-2 (apply str (reverse input)) :number-literals reversed-number-literals)]
     (str first-digit last-digit)))
 
-(defn solve-problem-part-2 [input]
-  (->> input
-       (map string->pass-part-2)
-       (map #(Integer/parseInt %))
-       (apply +)))
-
+(->> problem-input
+     (map string->pass-part-2)
+     (map #(Integer/parseInt %))
+     (apply +))
 
 ;; another, simpler solution
 (def numbers {"1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8 "9" 9})
-(def normal-number-literals {"one" 1 "two" 2 "three" 3 "four" 4 "five" 5
-                             "six" 6 "seven" 7 "eight" 8 "nine" 9})
 (def reversed-number-literals (update-keys normal-number-literals (fn [key]
                                                                     (apply str (reverse key)))))
 
-(defn find-first-digit [input term-maps]
+(defn find-first-digit-p2 [input term-maps]
   (second (reduce (fn [[lowest-index value] key]
                     (let [index-of-key (str/index-of input key)]
                       (if (and index-of-key (< index-of-key lowest-index))
@@ -88,7 +81,7 @@
                   (map first term-maps))))
 
 (defn calibration-row->value [input]
-  (str (find-first-digit input (merge numbers normal-number-literals)) (find-first-digit (apply str (reverse input)) (merge numbers reversed-number-literals))))
+  (str (find-first-digit-p2 input (merge numbers normal-number-literals)) (find-first-digit-p2 (apply str (reverse input)) (merge numbers reversed-number-literals))))
 
 (->> problem-input
      (map calibration-row->value)
