@@ -6,7 +6,7 @@
       slurp
       str/split-lines))
 
-(defn string->digit-seq [input]
+(defn string->digit-seq [input & {:keys [allow-negatives]}]
   (->> input
-       (re-seq #"\d+")
+       (re-seq (if allow-negatives #"-?\d+" #"\d+"))
        (map #(Long/parseLong %))))
