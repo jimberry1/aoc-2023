@@ -23,7 +23,7 @@
                               rest-stars)]
         (recur rest-stars distances)))))
 
-(defn indexed-space->expasion-indexes [indexed-space coord]
+(defn indexed-space->expansion-indexes [indexed-space coord]
   (->> indexed-space
        (group-by #(-> % :coords coord))
        (reduce (fn [acc [k v]] (if (->> v (map :val) (every? #(= % \.))) (conj acc k) acc))
@@ -31,8 +31,8 @@
 
 (defn solve [input expansion-coefficient]
   (let [indexed-space (->> input (map-indexed #(index-space %1 %2)) flatten)
-        x-expansion (indexed-space->expasion-indexes indexed-space :x)
-        y-expansion (indexed-space->expasion-indexes indexed-space :y)]
+        x-expansion (indexed-space->expansion-indexes indexed-space :x)
+        y-expansion (indexed-space->expansion-indexes indexed-space :y)]
     (find-distances (filter :is-star? indexed-space) x-expansion y-expansion expansion-coefficient)))
 
 (solve real-input 2) ;; part 1
