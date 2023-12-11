@@ -1,6 +1,5 @@
-(ns aoc-2023.day-4.core
-  (:require [clojure.string :as str]
-            [aoc-2023.utils :as utils]))
+(ns aoc-2023.day-3.core
+  (:require [aoc-2023.utils :as utils]))
 
 (def test-input (utils/input-file->rows "src/aoc_2023/day_3/example.txt"))
 (def day-3-input (utils/input-file->rows "resources/input_3.txt"))
