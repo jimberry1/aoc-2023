@@ -40,7 +40,7 @@
         normalised-group-2 (take shortest-coll-length group-2)]
     (every? identity (map #(= %1 %2) normalised-group-1 normalised-group-2))))
 
-(defn find-mirror [rows allow-smudges?]
+(defn find-mirror-index [rows allow-smudges?]
   (loop [[split-index & rest-splits] (range 1 (count rows))]
     (let [[section-1 section-2] (split-at split-index rows)
           is-reflection? (if allow-smudges? is-smudged-mirror-img? is-mirror-img?)]
@@ -51,7 +51,7 @@
 
 (defn summarise-grid [rows allow-smudges?]
   (let [columns (rows->columns rows)]
-    (+ (* 100 (find-mirror rows allow-smudges?)) (find-mirror columns allow-smudges?))))
+    (+ (* 100 (find-mirror-index rows allow-smudges?)) (find-mirror-index columns allow-smudges?))))
 
 ;; part 1
 (->> real-input (map #(summarise-grid % false)) (reduce +))
