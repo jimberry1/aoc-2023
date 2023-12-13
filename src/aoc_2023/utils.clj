@@ -10,3 +10,9 @@
   (->> input
        (re-seq (if allow-negatives #"-?\d+" #"\d+"))
        (map #(Long/parseLong %))))
+
+(defn input-file->grouped-rows [filename partition-indicator]
+  (->> filename
+       input-file->rows
+       (partition-by #(= % partition-indicator))
+       (remove #(= (first %) partition-indicator))))
