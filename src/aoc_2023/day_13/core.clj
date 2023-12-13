@@ -17,7 +17,7 @@
     {:equal? (= equal-count num-of-entries)
      :equal-with-smudge? (>= (inc equal-count) num-of-entries)}))
 
-(defn is-smudged-mirror?
+(defn is-smudged-mirror-img?
   "Checks to see whether two groups are exactly 1 smudge away from being enantiomers"
   [group-1 group-2]
   (let [shortest-coll-length (min (count group-1) (count group-2))
@@ -31,8 +31,8 @@
           equal? (recur rest-1 rest-2 already-used-smudge?)
           (and equal-with-smudge? (not already-used-smudge?)) (recur rest-1 rest-2 true))))))
 
-(defn is-mirror?
-  "Fn checks whether two groups are mirror images of each other.
+(defn is-mirror-img?
+  "Checks whether two groups are mirror images of each other.
    A group represents a collection of rows, e.g. [\"##..#\" \"#.#.#\"]"
   [group-1 group-2]
   (let [shortest-coll-length (min (count group-1) (count group-2))
@@ -41,19 +41,17 @@
     (every? identity (map #(= %1 %2) normalised-group-1 normalised-group-2))))
 
 (defn find-mirror [rows allow-smudges?]
-  (loop [remaining-splits (range 1 (count rows))]
-    (let [[split-index & rest-splits] remaining-splits
-          [section-1 section-2] (split-at split-index rows)]
+  (loop [[split-index & rest-splits] (range 1 (count rows))]
+    (let [[section-1 section-2] (split-at split-index rows)
+          is-reflection? (if allow-smudges? is-smudged-mirror-img? is-mirror-img?)]
       (cond
-        ((if allow-smudges? is-smudged-mirror? is-mirror?) section-1 section-2) split-index
+        (is-reflection? section-1 section-2) split-index
         (empty? rest-splits) 0
         :else (recur rest-splits)))))
 
 (defn summarise-grid [rows allow-smudges?]
-  (let [columns (rows->columns rows)
-        row-mirror-index (find-mirror rows allow-smudges?)
-        column-mirror-index (find-mirror columns allow-smudges?)]
-    (+ (* row-mirror-index 100) column-mirror-index)))
+  (let [columns (rows->columns rows)]
+    (+ (* 100 (find-mirror rows allow-smudges?)) (find-mirror columns allow-smudges?))))
 
 ;; part 1
 (->> real-input (map #(summarise-grid % false)) (reduce +))
