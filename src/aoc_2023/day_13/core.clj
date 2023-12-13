@@ -53,8 +53,5 @@
   (let [columns (rows->columns rows)]
     (+ (* 100 (find-mirror-index rows allow-smudges?)) (find-mirror-index columns allow-smudges?))))
 
-;; part 1
-(->> real-input (map #(summarise-grid % false)) (reduce +))
-
-;; part 2
-(->> real-input (map #(summarise-grid % true)) (reduce +))
+(->> real-input (map #(summarise-grid % false)) (reduce +)) ;; part 1
+(->> real-input (map #(summarise-grid % true)) (reduce +)) ;; part 2
