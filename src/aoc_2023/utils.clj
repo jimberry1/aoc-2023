@@ -16,3 +16,8 @@
        input-file->rows
        (partition-by #(= % partition-indicator))
        (remove #(= (first %) partition-indicator))))
+
+(defn indexed-grid [input & {:keys [tile-fn]}]
+  (flatten (map-indexed (fn [y-index row]
+                          (map-indexed (fn [x-index tile]
+                                         {:coords {:x x-index :y y-index} :val (if tile-fn (tile-fn tile) tile)}) row)) input)))
